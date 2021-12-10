@@ -17,11 +17,14 @@ public class Calc {
                         "\n"+"To enter an operation, use the operation symbol without quotation marks." +
                         "\n"+"Press Enter key to continue:"
                 );
+        /*
+        //need fix this code
         try
         {
             System.in.read();
         }
         catch(Exception e){}
+        */
 
 
             System.out.print("Enter first num: ");
