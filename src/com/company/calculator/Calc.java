@@ -51,10 +51,10 @@ public class Calc {
             System.out.print(ENTER_OPERATION_MESSAGE);
             operation = scanner.next();
 
-            if (operation.contains("+") ||
-                    operation.contains("-") ||
-                    operation.contains("*") ||
-                    operation.contains("/")) {
+            if (operation.contentEquals("+") ||
+                    operation.contentEquals("-") ||
+                    operation.contentEquals("*") ||
+                    operation.contentEquals("/")) {
                 isIncorrectInput = true;
             } else {
                 System.out.println(NONEXISTING_OPERATION_MESSAGE);
