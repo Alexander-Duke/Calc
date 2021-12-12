@@ -1,108 +1,108 @@
 package com.company.calculator;
 
 import java.util.Scanner;
-import java.lang.String;
 
-import static com.company.constants.CalcConstants.EXIT_MESSAGE;
-import static com.company.constants.CalcConstants.WELCOME_MESSAGE;
+import static com.company.calculator.operations.NumbersOperation.*;
+import static com.company.constants.CalcMessages.*;
 
-//This is calculator
 public class Calc {
-    public static void main(String[] args) {
-        Scanner num = new Scanner(System.in);
-        float firstNumber = 0, second = 0, result;
-        String operation, nextInput;
-        boolean isIncorrectInput;
+    private final Scanner scanner = new Scanner(System.in);
+    private float firstNumber = 0, secondNumber = 0, result;
+    private String operation;
+    private String usersInput = "";
+    private boolean isIncorrectInput;
 
+    public void startCalculator() {
         System.out.print(WELCOME_MESSAGE);
 
-        nextInput = num.nextLine();
-        while (!nextInput.contains(EXIT_MESSAGE)) {
+        while (!usersInput.contains(EXIT_MESSAGE)) {
             isIncorrectInput = true;
-            // 1. Ввод первого числа и его проверка
-            System.out.print("Enter first num: ");
-            while (isIncorrectInput) {
-                if (num.hasNextFloat()) {
-                    firstNumber = num.nextFloat();
-                    isIncorrectInput = false;
-                } else {
-                    System.out.println("Incorrect value. Try again" + "\n" + "Enter first num: ");
-                    isIncorrectInput = true;
-                    nextInput = num.nextLine();
-                }
-            }
 
-            // 2. Ввод операции и проверка
-            do {
-                System.out.print("\n" + "Enter operation: ");
-                operation = num.next();
+            System.out.print(ENTER_FIRST_NUM_MESSAGE);
+            firstNumberProcessing();
 
-                // Проверяем правильно ли введена операция.
-                if (operation.contains("+") ||
-                        operation.contains("-") ||
-                        operation.contains("*") ||
-                        operation.contains("/"))
-                    isIncorrectInput = true;
-                else
-                    System.out.println("A nonexistent operation was entered." + "\n" + "Try again.");
-            } while (!isIncorrectInput);
+            operationProcessing();
 
-
-            // 3. Ввод второго числа и его проверка
-            System.out.print("\n" + "Enter second num: "); //введите второе число
-
+            System.out.print(ENTER_SECOND_NUM_MESSAGE);
             isIncorrectInput = true;
-            while (isIncorrectInput) {
-                if (num.hasNextFloat()) {
-                    second = num.nextFloat();
-                    isIncorrectInput = false;
-                } else {
-                    System.out.println("Incorrect value. Try again" + "\n" + "\n" + "Enter second num: ");
-                    isIncorrectInput = true;
-                    nextInput = num.nextLine();
-                }
-            }
-            //проверка деления на ноль
-            while (second == 0.0 && operation.contains("/")) {
-                System.out.print("Result is = Cannot be divided by zero!" + "\n" + "Try again" + "\n" + "Enter second num: ");
-                isIncorrectInput = true;
-                //скопировано из проверки ввода второго числа
-                while (isIncorrectInput) {
-                    if (num.hasNextFloat()) {
-                        second = num.nextFloat();
-                        isIncorrectInput = false;
-                    } else {
-                        System.out.println("Incorrect value. Try again" + "\n" + "Enter second num: ");
-                        isIncorrectInput = true;
-                        nextInput = num.nextLine();
-                    }
-                }
-                //скопировано из проверки ввода второго числа
-            }
+            secondNumberProcessing();
 
-            // 4. Выполнение операции
-            switch (operation) {
-                case "+":
-                    result = firstNumber + second;
-                    System.out.println("\n" + "Result is: " + "\n" + firstNumber + " " + operation + " " + second + " = " + result);
-                    break;
-                case "-":
-                    result = firstNumber - second;
-                    System.out.println("\n" + "Result is: " + "\n" + firstNumber + " " + operation + " " + second + " = " + result);
-                    break;
-                case "*":
-                    result = firstNumber * second;
-                    System.out.println("\n" + "Result is: " + "\n" + firstNumber + " " + operation + " " + second + " = " + result);
-                    break;
-                case "/":
-                    result = firstNumber / second;
-//                    System.out.println("\n" + "Result is: " + "\n" + firstNumber + " " + operation + " " + second + " = " + result);
-                    System.out.printf("\nResult is:\n%.2f %s %.2f = %.2f%n", firstNumber, operation, second, result);
-                    break;
-            }
-            nextInput = num.nextLine();
-            System.out.println("\n" + "Press Enter to retry or enter an \"exit\" to complete.");
-            nextInput = num.nextLine();
+            divideByZeroProcessing();
+
+            processCalculation();
         }
+    }
+
+    private void firstNumberProcessing() {
+        while (isIncorrectInput) {
+            if (scanner.hasNextFloat()) {
+                firstNumber = scanner.nextFloat();
+                isIncorrectInput = false;
+            } else {
+                System.out.println(INCORRECT_FIRST_NUM_MESSAGE);
+                isIncorrectInput = true;
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private void operationProcessing() {
+        do {
+            System.out.print(ENTER_OPERATION_MESSAGE);
+            operation = scanner.next();
+
+            if (operation.contentEquals("+") ||
+                    operation.contentEquals("-") ||
+                    operation.contentEquals("*") ||
+                    operation.contentEquals("/")) {
+                isIncorrectInput = true;
+            } else {
+                System.out.println(NONEXISTING_OPERATION_MESSAGE);
+            }
+
+        } while (!isIncorrectInput);
+    }
+
+    private void secondNumberProcessing() {
+        while (isIncorrectInput) {
+            if (scanner.hasNextFloat()) {
+                secondNumber = scanner.nextFloat();
+                isIncorrectInput = false;
+            } else {
+                System.out.println(INCORRECT_SECOND_NUM_MESSAGE);
+                isIncorrectInput = true;
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private void divideByZeroProcessing() {
+        while (secondNumber == 0.0 && DIVISION.equals(operation)) {
+            System.out.print(DEVIDE_BY_ZERO_MESSAGE);
+            isIncorrectInput = true;
+            secondNumberProcessing();
+        }
+    }
+
+    private void processCalculation() {
+        switch (operation) {
+            case ADDITION:
+                result = firstNumber + secondNumber;
+                break;
+            case SUBTRACTION:
+                result = firstNumber - secondNumber;
+                break;
+            case MULTIPLICATION:
+                result = firstNumber * secondNumber;
+                break;
+            case DIVISION:
+                result = firstNumber / secondNumber;
+                break;
+        }
+
+        System.out.printf(RESULT_MESSAGE, firstNumber, operation, secondNumber, result);
+        System.out.println(RETRY_OR_FINISH_MESSAGE);
+        usersInput = scanner.nextLine();
+        usersInput = scanner.nextLine();
     }
 }
